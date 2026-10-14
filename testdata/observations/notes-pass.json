@@ -1,0 +1,5 @@
+{"observations": [
+  {"criterion_id": "seam", "source": "note", "evidence": "The seam along the lid is closed and unbroken.", "finding": "complies", "confidence": 0.95},
+  {"criterion_id": "label", "source": "note", "evidence": "The label is legible, square, and carries a printed barcode.", "finding": "complies", "confidence": 0.95},
+  {"criterion_id": "surface", "source": "note", "evidence": "The visible surface is clean and free of scratches and stains.", "finding": "complies", "confidence": 0.95}
+]}

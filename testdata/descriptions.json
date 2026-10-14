@@ -1,0 +1,5 @@
+{
+  "testdata/images/pass.png": "A pale grey panel fills the frame. The seam along the lid is closed and unbroken, the label is legible and square with a sharp printed barcode, and the surface is clean and free of scratches and stains.",
+  "testdata/images/fail.png": "A pale grey panel with a dark diagonal scratch across its lower half. The seam along the lid is open on the left side, and the label is legible and square with a sharp printed barcode.",
+  "testdata/images/ambiguous.png": "A dark frame in which the panel is barely distinguishable. The seam along the lid is not visible, the label is legible and square with a sharp printed barcode, and no surface detail is visible."
+}
