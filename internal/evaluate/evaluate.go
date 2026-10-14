@@ -77,7 +77,7 @@ func Run(
 	if err := inspection.ValidateObservations(criteria, evidence, observations); err != nil {
 		return inspection.Result{}, err
 	}
-	if err := verifyQuotes(evidence, observations); err != nil {
+	if err := inspection.VerifyQuotes(evidence, observations); err != nil {
 		return inspection.Result{}, err
 	}
 
@@ -215,31 +215,6 @@ func approvalFor(summary inspection.Summary, criteria int) inspection.Approval {
 		Role:     "qualified human inspector",
 		Reason:   reason,
 	}
-}
-
-// verifyQuotes re-checks that every observation quotes the source it claims.
-//
-// This is the rule that keeps a status backed by text somebody can go and read.
-// Text the source does not contain is refused here, before any status exists:
-// an invented quote is not weak evidence, it is not evidence at all.
-func verifyQuotes(evidence inspection.Evidence, observations []inspection.Observation) error {
-	for position, observation := range observations {
-		text, supplied := evidence.EvidenceFor(observation.Source, observation.ImageRef)
-		if !supplied {
-			return fmt.Errorf("criterion %q: observation %d claims a source this run did not supply: %s %q",
-				observation.CriterionID, position+1, observation.Source, observation.ImageRef)
-		}
-		if observation.EvidenceFoundIn(text) {
-			continue
-		}
-		if observation.Source == inspection.SourceImage {
-			return fmt.Errorf("criterion %q: observation %d quotes text the description of %q does not contain: %q",
-				observation.CriterionID, position+1, observation.ImageRef, observation.Evidence)
-		}
-		return fmt.Errorf("criterion %q: observation %d quotes text the notes do not contain: %q",
-			observation.CriterionID, position+1, observation.Evidence)
-	}
-	return nil
 }
 
 // Verify asks independently whether a result keeps every rule this package

@@ -90,6 +90,13 @@ func (e Evidence) EvidenceFor(source Source, imageRef string) (string, bool) {
 	return "", false
 }
 
+// ImageRefs returns the references of the supplied images in a stable order, so
+// two runs over the same evidence produce the same request and the same
+// messages.
+func ImageRefs(evidence Evidence) []string {
+	return slices.Sorted(maps.Keys(evidence.Images))
+}
+
 // Validate applies every static rule of the evidence contract: an inspection
 // needs something to read, and every supplied image needs a description that
 // an observation can quote.
@@ -374,6 +381,33 @@ func ValidateObservations(criteria Criteria, evidence Evidence, observations []O
 	}
 
 	return problems.OrNil()
+}
+
+// VerifyQuotes re-checks that every observation quotes the source it claims.
+//
+// This is the rule that keeps a status backed by text somebody can go and read,
+// and it is applied twice on purpose: once to what a reader reported, and again
+// to what an evaluator was handed. Text the source does not contain is refused
+// rather than treated as weak evidence, because an invented quote is not
+// evidence at all.
+func VerifyQuotes(evidence Evidence, observations []Observation) error {
+	for position, observation := range observations {
+		text, supplied := evidence.EvidenceFor(observation.Source, observation.ImageRef)
+		if !supplied {
+			return fmt.Errorf("criterion %q: observation %d claims a source this run did not supply: %s %q",
+				observation.CriterionID, position+1, observation.Source, observation.ImageRef)
+		}
+		if observation.EvidenceFoundIn(text) {
+			continue
+		}
+		if observation.Source == SourceImage {
+			return fmt.Errorf("criterion %q: observation %d quotes text the description of %q does not contain: %q",
+				observation.CriterionID, position+1, observation.ImageRef, observation.Evidence)
+		}
+		return fmt.Errorf("criterion %q: observation %d quotes text the notes do not contain: %q",
+			observation.CriterionID, position+1, observation.Evidence)
+	}
+	return nil
 }
 
 // EvidenceFoundIn reports whether this observation's evidence is a real quote
