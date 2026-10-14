@@ -306,18 +306,18 @@ func (i Input) Validate() error {
 }
 
 // ValidateObservations applies every static rule of the observation contract
-// against the criteria those observations claim to be about and the input they
-// claim to have come from.
+// against the criteria those observations claim to be about and the evidence
+// they claim to have come from.
 //
 // An empty set is valid: it is the honest input of a reader that found nothing,
 // and it makes every criterion resolve to review.
-func ValidateObservations(criteria Criteria, input Input, observations []Observation) error {
+func ValidateObservations(criteria Criteria, evidence Evidence, observations []Observation) error {
 	declared := make(map[string]bool, len(criteria.Criteria))
 	for _, criterion := range criteria.Criteria {
 		declared[criterion.ID] = true
 	}
-	supplied := make(map[string]bool, len(input.Images))
-	for _, image := range input.Images {
+	supplied := make(map[string]bool, len(evidence.Images))
+	for image := range evidence.Images {
 		supplied[image] = true
 	}
 

@@ -22,9 +22,7 @@ package evaluate
 
 import (
 	"fmt"
-	"maps"
 	"math"
-	"slices"
 	"strings"
 
 	"github.com/GhandyP/product-image-inspection/internal/inspection"
@@ -76,7 +74,7 @@ func Run(
 	if err := evidence.Validate(); err != nil {
 		return inspection.Result{}, err
 	}
-	if err := inspection.ValidateObservations(criteria, inputOf(evidence), observations); err != nil {
+	if err := inspection.ValidateObservations(criteria, evidence, observations); err != nil {
 		return inspection.Result{}, err
 	}
 	if err := verifyQuotes(evidence, observations); err != nil {
@@ -242,15 +240,6 @@ func verifyQuotes(evidence inspection.Evidence, observations []inspection.Observ
 			observation.CriterionID, position+1, observation.Evidence)
 	}
 	return nil
-}
-
-// inputOf projects the evidence onto the input shape the shared observation
-// rules validate against, so those rules exist in exactly one place.
-func inputOf(evidence inspection.Evidence) inspection.Input {
-	return inspection.Input{
-		Notes:  evidence.Notes,
-		Images: slices.Sorted(maps.Keys(evidence.Images)),
-	}
 }
 
 // Verify asks independently whether a result keeps every rule this package

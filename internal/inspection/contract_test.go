@@ -17,12 +17,11 @@ func validCriteria() Criteria {
 	}
 }
 
-// validInput is the baseline supply every observation case quotes.
-func validInput() Input {
-	return Input{
-		ProductID: "SKU-4471",
-		Notes:     "the seam is closed and the label is legible",
-		Images:    []string{"testdata/label.png"},
+// validEvidence is the baseline supply every observation case quotes.
+func validEvidence() Evidence {
+	return Evidence{
+		Notes:  "the seam is closed and the label is legible",
+		Images: map[string]string{"testdata/label.png": "the label is legible"},
 	}
 }
 
@@ -150,7 +149,7 @@ func TestObservationsValidateAcceptsCompleteObservations(t *testing.T) {
 		},
 	}
 
-	if err := ValidateObservations(validCriteria(), validInput(), observations); err != nil {
+	if err := ValidateObservations(validCriteria(), validEvidence(), observations); err != nil {
 		t.Fatalf("ValidateObservations() = %v, want nil", err)
 	}
 }
@@ -235,7 +234,7 @@ func TestObservationsValidateRefusesEveryMalformedField(t *testing.T) {
 			}
 			tc.mutate(&observation)
 
-			err := ValidateObservations(validCriteria(), validInput(), []Observation{observation})
+			err := ValidateObservations(validCriteria(), validEvidence(), []Observation{observation})
 			if err == nil {
 				t.Fatalf("ValidateObservations() = nil, want an error naming %q", tc.want)
 			}
@@ -249,7 +248,7 @@ func TestObservationsValidateRefusesEveryMalformedField(t *testing.T) {
 func TestObservationsValidateAcceptsAnEmptySet(t *testing.T) {
 	// No observation is not a malformed payload: it is the shape that makes
 	// every criterion resolve to review.
-	if err := ValidateObservations(validCriteria(), validInput(), nil); err != nil {
+	if err := ValidateObservations(validCriteria(), validEvidence(), nil); err != nil {
 		t.Fatalf("ValidateObservations() = %v, want nil", err)
 	}
 }
