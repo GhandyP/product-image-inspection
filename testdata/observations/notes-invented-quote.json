@@ -1,0 +1,3 @@
+{"observations": [
+  {"criterion_id": "seam", "source": "note", "evidence": "the seam is welded shut", "finding": "violates", "confidence": 0.95}
+]}

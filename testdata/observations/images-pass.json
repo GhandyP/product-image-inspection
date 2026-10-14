@@ -1,0 +1,5 @@
+{"observations": [
+  {"criterion_id": "seam", "source": "image", "image_ref": "testdata/images/pass.png", "location": "along the lid", "evidence": "The seam along the lid is closed and unbroken", "finding": "complies", "confidence": 0.95},
+  {"criterion_id": "label", "source": "image", "image_ref": "testdata/images/pass.png", "location": "centre of the panel", "evidence": "the label is legible and square with a sharp printed barcode", "finding": "complies", "confidence": 0.95},
+  {"criterion_id": "surface", "source": "image", "image_ref": "testdata/images/pass.png", "location": "the whole panel", "evidence": "the surface is clean and free of scratches and stains", "finding": "complies", "confidence": 0.95}
+]}

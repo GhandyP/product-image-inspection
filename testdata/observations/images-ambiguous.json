@@ -1,0 +1,5 @@
+{"observations": [
+  {"criterion_id": "seam", "source": "image", "image_ref": "testdata/images/ambiguous.png", "location": "the lid", "evidence": "The seam along the lid is not visible", "finding": "indeterminate", "confidence": 0.6},
+  {"criterion_id": "label", "source": "image", "image_ref": "testdata/images/ambiguous.png", "location": "centre of the panel", "evidence": "the label is legible and square with a sharp printed barcode", "finding": "complies", "confidence": 0.95},
+  {"criterion_id": "surface", "source": "image", "image_ref": "testdata/images/ambiguous.png", "location": "the panel", "evidence": "no surface detail is visible", "finding": "indeterminate", "confidence": 0.6}
+]}

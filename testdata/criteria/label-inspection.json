@@ -1,0 +1,8 @@
+{
+  "product_id": "SKU-4471",
+  "criteria": [
+    {"id": "seam", "statement": "The seam along the lid is closed and unbroken."},
+    {"id": "label", "statement": "The label is legible, square, and carries a printed barcode.", "min_confidence": 0.9},
+    {"id": "surface", "statement": "The visible surface is free of scratches and stains."}
+  ]
+}

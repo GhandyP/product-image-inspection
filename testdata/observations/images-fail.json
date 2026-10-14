@@ -1,0 +1,5 @@
+{"observations": [
+  {"criterion_id": "seam", "source": "image", "image_ref": "testdata/images/fail.png", "location": "left side of the lid", "evidence": "The seam along the lid is open on the left side", "finding": "violates", "confidence": 0.95},
+  {"criterion_id": "label", "source": "image", "image_ref": "testdata/images/fail.png", "location": "centre of the panel", "evidence": "the label is legible and square with a sharp printed barcode", "finding": "complies", "confidence": 0.95},
+  {"criterion_id": "surface", "source": "image", "image_ref": "testdata/images/fail.png", "location": "lower half", "evidence": "a dark diagonal scratch across its lower half", "finding": "violates", "confidence": 0.95}
+]}
