@@ -188,7 +188,7 @@ func (r *ADKReader) Read(
 	var responseText string
 	for event, err := range r.runner.Run(ctx, "user", sessionID, message, adkagent.RunConfig{}) {
 		if err != nil {
-			return nil, fmt.Errorf("run the evidence reader: %w", err)
+			return nil, fmt.Errorf("run the evidence reader: %w: %w", llm.ErrModelUnavailable, err)
 		}
 		if event == nil || event.Content == nil {
 			continue
@@ -197,7 +197,7 @@ func (r *ADKReader) Read(
 	}
 
 	if strings.TrimSpace(responseText) == "" {
-		return nil, fmt.Errorf("run the evidence reader: %w", errEmptyResponse)
+		return nil, fmt.Errorf("run the evidence reader: %w: %w", llm.ErrModelUnavailable, errEmptyResponse)
 	}
 
 	var answer observationAnswer

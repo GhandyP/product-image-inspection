@@ -393,17 +393,17 @@ func TestRunDescribesAnImageWithTheDescriberItIsGiven(t *testing.T) {
 	var asked []string
 	deps := Deps{
 		NewDescriber: func(context.Context) (vision.Describer, error) {
+			asked = append(asked, image)
 			return vision.Fake{Descriptions: map[string]string{image: description}}, nil
 		},
 		NewReader: func(context.Context) (agent.Reader, error) {
 			return agent.Fake{Observations: []inspection.Observation{{
 				CriterionID: "seam", Source: inspection.SourceImage, ImageRef: image,
 				Location: "across the lower half", Evidence: "dark diagonal scratch",
-				Finding:  inspection.FindingViolates, Confidence: 0.9,
+				Finding: inspection.FindingViolates, Confidence: 0.9,
 			}}}, nil
 		},
 	}
-	_ = asked
 
 	got := run(t, deps, "-criteria", criteria, "-image", image)
 	if got.code != ExitReview {
@@ -412,6 +412,9 @@ func TestRunDescribesAnImageWithTheDescriberItIsGiven(t *testing.T) {
 	}
 	if !strings.Contains(got.stdout, "dark diagonal scratch") {
 		t.Errorf("stdout does not carry the evidence quoted from the described image:\n%s", got.stdout)
+	}
+	if len(asked) != 1 || asked[0] != image {
+		t.Errorf("the describer was asked for %v, want exactly %q", asked, image)
 	}
 }
 

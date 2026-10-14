@@ -109,7 +109,7 @@ func (d *ADKDescriber) Describe(ctx context.Context, ref string) (string, error)
 	var description string
 	for event, err := range d.runner.Run(ctx, "user", "describe", message, adkagent.RunConfig{}) {
 		if err != nil {
-			return "", fmt.Errorf("run the image describer: %w", err)
+			return "", fmt.Errorf("run the image describer: %w: %w", llm.ErrModelUnavailable, err)
 		}
 		if event == nil || event.Content == nil {
 			continue
@@ -118,7 +118,7 @@ func (d *ADKDescriber) Describe(ctx context.Context, ref string) (string, error)
 	}
 
 	if strings.TrimSpace(description) == "" {
-		return "", fmt.Errorf("run the image describer for %q: %w", ref, errNothingDescribed)
+		return "", fmt.Errorf("run the image describer for %q: %w: %w", ref, llm.ErrModelUnavailable, errNothingDescribed)
 	}
 	return strings.TrimSpace(description), nil
 }

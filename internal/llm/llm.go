@@ -26,6 +26,12 @@ const DefaultModel = "gemini-flash-latest"
 // ErrMissingAPIKey reports that GOOGLE_API_KEY was not configured.
 var ErrMissingAPIKey = errors.New("missing GOOGLE_API_KEY")
 
+// ErrModelUnavailable reports that the model could not be used at all: the
+// request failed, or it produced nothing. A caller can tell it apart from an
+// answer that arrived and was refused, and has to do something different about
+// it.
+var ErrModelUnavailable = errors.New("the model could not be used")
+
 // Name reports the model a caller will use.
 func Name() string {
 	if name := strings.TrimSpace(os.Getenv("ADK_MODEL")); name != "" {
