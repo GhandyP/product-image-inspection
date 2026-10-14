@@ -1,0 +1,9 @@
+# Local Pi runtime state (not part of the project)
+.atl/
+
+# Build output
+/dist/
+*.test
+
+# Binary produced by `go build` in this directory
+/product-image-inspection

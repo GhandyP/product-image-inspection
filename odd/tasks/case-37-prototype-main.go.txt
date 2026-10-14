@@ -1,0 +1,21 @@
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+
+	"github.com/GhandyP/adk-go-enterprise-cookbook/internal/adkhelper"
+)
+
+func main() {
+	if err := adkhelper.Run(
+		context.Background(),
+		os.Args[1:],
+		"case_37_product_image_analysis",
+		"A text-only starting point for product image analysis.",
+		"Evaluate the product description or inspection notes supplied by the user against the stated criteria. Describe evidence and ambiguity, and do not claim to inspect an image.",
+	); err != nil {
+		log.Fatal(err)
+	}
+}
