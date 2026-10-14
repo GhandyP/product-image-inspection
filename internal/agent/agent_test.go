@@ -360,18 +360,6 @@ func TestFakeReaderAnswersWithoutAModel(t *testing.T) {
 	}
 }
 
-func TestModelNameHonoursTheEnvironment(t *testing.T) {
-	t.Setenv("ADK_MODEL", "")
-	if got := ModelName(); got != DefaultModel {
-		t.Errorf("ModelName() = %q, want %q", got, DefaultModel)
-	}
-
-	t.Setenv("ADK_MODEL", "  gemini-2.5-pro  ")
-	if got := ModelName(); got != "gemini-2.5-pro" {
-		t.Errorf("ModelName() = %q, want the override without its padding", got)
-	}
-}
-
 func TestNewGeminiReaderNeedsAKey(t *testing.T) {
 	t.Setenv("GOOGLE_API_KEY", "")
 

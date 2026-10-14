@@ -24,22 +24,18 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
 	"strings"
 	"sync/atomic"
 
 	adkagent "google.golang.org/adk/v2/agent"
 	"google.golang.org/adk/v2/agent/llmagent"
 	"google.golang.org/adk/v2/model"
-	"google.golang.org/adk/v2/model/gemini"
 	"google.golang.org/adk/v2/runner"
 	"google.golang.org/genai"
 
 	"github.com/GhandyP/product-image-inspection/internal/inspection"
+	"github.com/GhandyP/product-image-inspection/internal/llm"
 )
-
-// DefaultModel is used when ADK_MODEL is not set.
-const DefaultModel = "gemini-flash-latest"
 
 // Instruction is the stable instruction of the reader agent.
 //
@@ -94,8 +90,10 @@ type ADKReader struct {
 
 var _ Reader = (*ADKReader)(nil)
 
-// ErrMissingAPIKey reports that GOOGLE_API_KEY was not configured.
-var ErrMissingAPIKey = errors.New("missing GOOGLE_API_KEY")
+// ErrMissingAPIKey reports that GOOGLE_API_KEY was not configured. It is the
+// error the shared model client returns, named here because a caller of this
+// package is the one that has to act on it.
+var ErrMissingAPIKey = llm.ErrMissingAPIKey
 
 var errEmptyResponse = errors.New("the model returned no observations")
 
@@ -124,26 +122,13 @@ func NewADKReader(m model.LLM) (*ADKReader, error) {
 	return &ADKReader{runner: r}, nil
 }
 
-// NewGeminiReader builds a reader backed by Gemini.
+// NewGeminiReader builds a reader backed by the configured Gemini model.
 func NewGeminiReader(ctx context.Context) (*ADKReader, error) {
-	key := strings.TrimSpace(os.Getenv("GOOGLE_API_KEY"))
-	if key == "" {
-		return nil, fmt.Errorf("create Gemini reader: %w", ErrMissingAPIKey)
-	}
-
-	m, err := gemini.NewModel(ctx, ModelName(), &genai.ClientConfig{APIKey: key})
+	m, err := llm.New(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("create Gemini model: %w", err)
+		return nil, fmt.Errorf("create the Gemini reader: %w", err)
 	}
 	return NewADKReader(m)
-}
-
-// ModelName reports the model the reader will use.
-func ModelName() string {
-	if name := strings.TrimSpace(os.Getenv("ADK_MODEL")); name != "" {
-		return name
-	}
-	return DefaultModel
 }
 
 // Prompt wraps the evidence in the reading task. It is deterministic: the same
