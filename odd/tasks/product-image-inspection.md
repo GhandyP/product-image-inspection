@@ -57,8 +57,9 @@ S12. El conjunto completo pasa sin `GOOGLE_API_KEY` y sin red: `gofmt`, `go vet`
 S13. ADK queda fijado en `google.golang.org/adk/v2 v2.2.0` con `go get` antes de `go mod tidy`, para que tidy
    no resuelva una versión más nueva ni arrastre otro toolchain.
 
-S14. Códigos de salida estables y documentados: `0` todo criterio resuelto, `2` uso, `3` entrada o payload
-   rechazado, `4` modelo no disponible, `5` defecto del repositorio (un criterio sin chequeo).
+S14. Códigos de salida estables y documentados: `0` todo criterio resuelto, `1` el run terminó y al menos un
+   criterio necesita una persona, `2` uso, `3` entrada o payload rechazado, `4` modelo no disponible, `5`
+   defecto del repositorio (un criterio sin chequeo o un resultado que rompe la garantía).
 
 ## Tasks
 
@@ -110,3 +111,12 @@ L5 (arquitectura, 2026-10-14): el modelo queda fuera del camino de decisión. Su
 (o la descripción de una imagen) en observaciones estructuradas por criterio; `internal/evaluate` deriva el
 estado. Un payload con una cita inventada, un criterio desconocido o confianza inválida se rechaza entero, y un
 criterio sin chequeo es un defecto del repositorio (exit 5), no un resultado plausible.
+
+L6 (precisión de S14, 2026-10-14): el código de salida `1` no existía en la primera escritura del spec y hacía
+falta: `0` decía "todo criterio resuelto", pero un run con `review` es un resultado válido, no un error, y un
+caller necesita distinguirlo para no tratar como fallo lo que es una respuesta. `1` es "el run terminó y al menos
+un criterio necesita una persona". El resto de S14 queda igual.
+
+L7 (T7, 2026-10-14): los fixtures del caso (pass, fail, ocluido, baja luz, evidencia faltante, contradictorio,
+imágenes pass/fail/ambigua) se commitean en `testdata/` y `internal/cli/e2e_test.go` corre el binario construido
+sobre todos ellos, porque los códigos de salida son una promesa al caller y `go run` los oculta.
